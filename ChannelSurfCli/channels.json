@@ -1,0 +1,20 @@
+﻿[
+  {
+    "name": "my custom channel",
+    "purpose": {
+      "value": "my custom channel description"
+    }
+  },
+  {
+    "name": "my other channel",
+    "purpose": {
+      "value": "my other channel description",
+    }
+  },
+  {
+    "name": "my unique channel",
+    "purpose": {
+      "value": "my unique channel description",
+    }
+  },
+]
