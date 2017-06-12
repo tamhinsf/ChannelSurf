@@ -84,7 +84,7 @@ At this point, you need to decide if you'll create new channels or re-create Sla
 * Build the app
  * In Visual Studio select ChannelSurfCli from the Solution Explorer, then from the top menu pick Build -> BuildSurfCli
   * Or, using the .NET Core SDK, you can perform these steps from the command line
-    * Open a command prompt, navigate to the ChannelSurfCli folder
+    * Open a command prompt, navigate to the ChannelSurfCli folder 
 	* dotnet restore
 	* dotnet build
 
