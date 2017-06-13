@@ -1,16 +1,16 @@
 # Channel Surf for Microsoft Teams 
  
-Channel Surf makes it easy get started with Microsoft Teams.  Quickly re-create your existing Slack channel structure, and bulk create new  channels.  Let's get started! 
+Quickly re-create your existing Slack channel structure, and bulk create new channels in Microsoft Teams.  Let's get started! 
 
 ## Identify your destination Team
 
 Use the Microsoft Teams app to create the Team you want to place your re-created or new channels within.  Then, decide if you want to:
 * Add entirely new channels 
 	
-	You'll edit a file called "channels.json" that contains the name and, optionally, description of the channels you want to create.
+	You'll edit a file called "channels.json" that contains the name and description of the channels you want to create.
 * Re-create Slack channels
 	
-	You can create a Slack Team export on a self-service basis as a Slack Team Owner or Admin.  Then, download the export file and tell Channel Surf its location.   We'll scan it and re-create the Slack channel structure in Teams.  It's that easy!
+	You can create a Slack Team export on a self-service basis as a Slack Team Owner or Admin.  Download the export file and tell Channel Surf its location.   We'll scan it and re-create the Slack channel structure in Teams.  It's that easy!
 
 NOTE: Channel Surf uses features of the Microsoft Graph currently in preview (beta).  You may encounter unexpected errors and changes in behavior.  We'll do our best to keep up.
 
@@ -51,8 +51,8 @@ You must register this application in the Azure Active Directory tenant associat
      * Click Select
      * Click Done
 	
-* Applications built using the Graph API permissions above require administrative consent before non-administrative users can sign in - which fortunately, you'll only need to do once.
-  * You can immediately provide consent to all users in your organization using the Azure Portal. Click the "Grant Permissions" button, which you can reach via your app's "Required permissions" link.
+* Applications built using the Graph API permissions above require administrative consent before non-administrative users can sign in - which fortunately, you'll only need to do once.  
+  * You can immediately provide consent to all users in your organization using the Azure Portal. Click the "Grant permissions" button, which you can reach via your app's "Required permissions" link.
     * Here's the full path to "Grant permissions": Azure Active Directory -> App registrations -> Your app (i.e. ChannelSurfCli) -> All settings ->  Required permissions -> Grant permissions
   * Or, whenever you successfully launch ChannelSurfCli, we'll show you the URL you can visit to provide admin consent.  Sign in as the admin for the O365 tenant you've configured Channel Surf CLI to work with. 
     * Note: if you've configured the re-direct URL to be the same value as we've shown you on this page (i.e. https://channelsurf-cli), you'll be sent to an invalid page after successfully signing in.  Don't worry!
