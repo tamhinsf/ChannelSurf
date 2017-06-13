@@ -80,7 +80,9 @@ At this point, you need to decide if you'll create new channels or re-create Sla
 * Click Start Export 
 * You'll receive a notification when your export is ready for download
 * Download the export.  It's a ZIP file and will be named in this format: "Your Team export Month Day Year.zip"
-* We recommend you re-name the export ZIP file to not have spaces. This will make it easier to work with: i.e. myexport.zip.  
+* We recommend you re-name the export ZIP file to not have spaces. This will make it easier to work with: i.e. myexport.zip.
+
+IMPORTANT: You Slack export contains a security token that can be used by ANYONE to download files you've attached to messages.  Handle your export file with extreme security.  Go back to the [Slack Export page](https://my.slack.com/services/export) when you have downloaded your archive and revoke "Your Team’s Export File Download Tokens".  
   
 ## Build ChannelSurfCli
 
@@ -102,8 +104,12 @@ At this point, you need to decide if you'll create new channels or re-create Sla
    * dotnet run /path/to/channels.json
    * dotnet run /path/to/slack/archive/myexport.zip (replace myexport.zip with your archive filename)
 * If prompted, provide your Active Directory Tenant Name and Application Id
-* Follow the instructions provided to sign in: start a web browser, enter the security code provided, and then your O365 credentials.  We strongly suggest you use your web browser's "private mode".
-* After you login through the web browser, return to your command prompt 
+* Follow the instructions provided to sign in:
+   * Start a web browser and go to https://aka.ms/devicelogin - we strongly suggest you use your web browser's "private mode".
+   * Enter the security code provided in the command prompt
+   * Consent to using ChannelSurfCli
+   * Enter your O365 credentials.  
+   * Return to your command prompt 
 * Select the target Microsoft Team you want to create or re-create your channels into.
 * Go back to the Microsoft Team app and explore the channels you added!
 
