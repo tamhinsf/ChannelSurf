@@ -1,15 +1,15 @@
 # Channel Surf for Microsoft Teams 
 
-Quickly create Microsoft Teams channels from scratch or from your existing Slack Team.
+Re-create your Slack channels in Microsoft Teams, and bulk create new Teams channels.  
 
-  * This application uses features of the Microsoft Graph currently in preview (beta).  You may encounter unexpected errors and changes in behavior.  We'll do our best to keep up.
-
-## Get started quickly with Microsoft Teams 
-
-We've made it fast and easy to create channels in Microsoft Teams.  Use the Microsoft Teams app to create a Team you want to place your channels within.  Then, you can:
+Channel Surf makes it easy to quickly get started with Microsot Teams.  First, use the Microsoft Teams app to create the Team you want to place your channels within.  Then, you can:
 
 * Define new channels to create within a file called "channels.json"
 * Re-create all the channels from your existing Slack Team.  How?  You can create a Slack Team export on a self-service basis as a Slack Team Owner or Admin.  Then, provide this Slack Export export to our app.  It's that easy!
+
+Let's get started!
+
+  * This application uses features of the Microsoft Graph currently in preview (beta).  You may encounter unexpected errors and changes in behavior.  We'll do our best to keep up.
 
 ## Setup a development environment 
 
@@ -25,7 +25,7 @@ We've made it fast and easy to create channels in Microsoft Teams.  Use the Micr
 * Find a user whose account you'd like to use with this example
   * Alternatively, you can choose to use your Office 365 administrator account 
 
-## Create the Channel Surf CLI Application in Azure Active Directory
+## Create the Channel Surf Application in Azure Active Directory
 
 You must register this application in the Azure Active Directory tenant associated with your Office 365 organization.  
 
@@ -85,8 +85,8 @@ At this point, you need to decide if you'll create new channels or re-create Sla
  * In Visual Studio select ChannelSurfCli from the Solution Explorer, then from the top menu pick Build -> BuildSurfCli
   * Or, using the .NET Core SDK, you can perform these steps from the command line
     * Open a command prompt, navigate to the ChannelSurfCli folder 
-	* dotnet restore
-	* dotnet build
+	 * dotnet restore
+	 * dotnet build
 
 ## Using ChannelSurfCli
  
