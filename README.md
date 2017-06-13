@@ -1,8 +1,6 @@
 # Channel Surf for Microsoft Teams 
-
-Re-create your Slack channel structure in Microsoft Teams, and bulk create new Teams channels.  
-
-Channel Surf makes it easy get started with Microsoft Teams.  Quickly re-create your existing Slack channel structure or bulk add new  channels.  Let's get started! 
+ 
+Channel Surf makes it easy get started with Microsoft Teams.  Quickly re-create your existing Slack channel structure, and bulk create new  channels.  Let's get started! 
 
 ## Identify your destination Team
 
