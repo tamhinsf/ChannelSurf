@@ -17,8 +17,8 @@ namespace ChannelSurfCli
         // you for them when you run this app.
 
 
-        static string aadTenant = "taminlahotmail.onmicrosoft.com";
-        static string aadAppClientId = "f7304085-fbaf-4cf9-be56-6207f8207c7f";
+        static string aadTenant = "";
+        static string aadAppClientId = "";
 
         // Don't change this constant
         // It is a constant that corresponds to fixed values in AAD that corresponds to Microsoft Graph
