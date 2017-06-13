@@ -1,15 +1,20 @@
 # Channel Surf for Microsoft Teams 
 
-Re-create your Slack channels in Microsoft Teams, and bulk create new Teams channels.  
+Re-create your Slack channel structure in Microsoft Teams, and bulk create new Teams channels.  
 
-Channel Surf makes it easy to quickly get started with Microsot Teams.  First, use the Microsoft Teams app to create the Team you want to place your channels within.  Then, you can:
+Channel Surf makes it easy get started with Microsoft Teams.  Quickly re-create your existing Slack channel structure or bulk add new  channels.  Let's get started! 
 
-* Define new channels to create within a file called "channels.json"
-* Re-create all the channels from your existing Slack Team.  How?  You can create a Slack Team export on a self-service basis as a Slack Team Owner or Admin.  Then, provide this Slack Export export to our app.  It's that easy!
+## Identify your destination Team
 
-Let's get started!
+Use the Microsoft Teams app to create the Team you want to place your re-created or new channels within.  Then, decide if you want to:
+* Add entirely new channels 
+	
+	You'll edit a file called "channels.json" that contains the name and, optionally, description of the channels you want to create.
+* Re-create Slack channels
+	
+	You can create a Slack Team export on a self-service basis as a Slack Team Owner or Admin.  Then, download the export file and tell Channel Surf its location.   We'll scan it and re-create the Slack channel structure in Teams.  It's that easy!
 
-  * This application uses features of the Microsoft Graph currently in preview (beta).  You may encounter unexpected errors and changes in behavior.  We'll do our best to keep up.
+NOTE: Channel Surf uses features of the Microsoft Graph currently in preview (beta).  You may encounter unexpected errors and changes in behavior.  We'll do our best to keep up.
 
 ## Setup a development environment 
 
@@ -22,7 +27,7 @@ Let's get started!
 
 * Sign in to your Office 365 environment as an administrator at [https://portal.office.com/admin/default.aspx](https://portal.office.com/admin/default.aspx)
 * Ensure you have enabled Microsoft Teams for your organization [https://portal.office.com/adminportal/home#/Settings/ServicesAndAddIns](https://portal.office.com/adminportal/home#/Settings/ServicesAndAddIns)  
-* Find a user whose account you'd like to use with this example
+* Identify a user whose account you'd like to use 
   * Alternatively, you can choose to use your Office 365 administrator account 
 
 ## Create the Channel Surf Application in Azure Active Directory
@@ -31,7 +36,7 @@ You must register this application in the Azure Active Directory tenant associat
 
 * Sign in to your Azure Management Portal at https://portal.azure.com
     * Or, from the Office 365 Admin center select "Azure AD"
-* Select Active Directory -> App registrations -> New application registration  
+* Within the Azure Portal, select Active Directory -> App registrations -> New application registration  
     * Name: ChannelSurfCli (anything will work - we suggest you keep this value)
     * Application type: NATIVE CLIENT APPLICATION
     * Redirect URI: https://channelsurf-cli (anything will work - however, this is the value we have hard-coded into our application code in Program.cs)
@@ -45,11 +50,11 @@ You must register this application in the Azure Active Directory tenant associat
 	   * Read all users' full profiles
 	   * Read and write all groups
 	 * Done
-* Applications built using the Graph API permissions above require administrative consent before non-administrative users can sign in - which fortunately, you'll only need to do once. If you have trouble signing in:
+* Applications built using the Graph API permissions above require administrative consent before non-administrative users can sign in - which fortunately, you'll only need to do once.
   * You can immediately provide consent to all users in the Azure Portal by selecting:
     * Azure Active Directory -> App registrations -> Your app (i.e. ChannelSurfCli) -> All settings ->  Required permissions -> Grant permissions
   * Or, whenever you successfully launch ChannelSurfCli, we'll show you the URL you can visit to provide admin consent.  Sign in as the admin for the O365 tenant you've configured Channel Surf CLI to work with. 
-   * Note: if you've configured the re-direct URL to be the same value as we've shown you on this page (i.e. https://channelsurf-cli), you'll be sent to an invalid page after successfully signing in.  Don't worry!
+    * Note: if you've configured the re-direct URL to be the same value as we've shown you on this page (i.e. https://channelsurf-cli), you'll be sent to an invalid page after successfully signing in.  Don't worry!
 * Take note of your tenant name, which is typically in the form of your-domain.onmicrosoft.com.  You'll need to supply this when building or running ChannelSurfCli.
 
 
@@ -57,10 +62,10 @@ You must register this application in the Azure Active Directory tenant associat
 
 At this point, you need to decide if you'll create new channels or re-create Slack Teams channels.  Go to the section for the operation you wish to perform.
 
-* Define channels in channels.json
-* Create your Slack Team export file
+* Add entirely new channels 
+* Re-create Slack channels
 
-### Define channels in channels.json
+### Add entirely new channels 
 * Open the cloned code from this repository, and navigate to the folder "ChannelSurfCli"
 * Open the file named channels.json
   * This file's name must remain channels.json.  Backup the original if you want.  We'll provide more flexibility in a future release.
@@ -68,7 +73,7 @@ At this point, you need to decide if you'll create new channels or re-create Sla
   * You can repeat the JSON structure to the number of teams you want to create.
   * This file mimics the file format used to store channel definitions from a Slack Team export file (next section)
 
-### Create your Slack Team export file
+### Re-create Slack channels
 * Go to this page https://my.slack.com/services/export
 * Sign in to your Slack Team as an Owner or Administrator
 * Click Start Export 
@@ -80,24 +85,24 @@ At this point, you need to decide if you'll create new channels or re-create Sla
 
 * Open the cloned code from this repository in Visual Studio, Visual Studio Code, or your favorite editor
  * Update Program.cs in the ChannelSurfCli folder with your tenant name (aadTenant) and Application ID (aadAppClientId) 
-  * Or, you can leave these values empty and provide them when you run the application.
-* Build the app
- * In Visual Studio select ChannelSurfCli from the Solution Explorer, then from the top menu pick Build -> BuildSurfCli
+ * Or, you can leave these values empty and provide them whenever you run the application.
+* Build ChannelSurfCli
+  * In Visual Studio select ChannelSurfCli from the Solution Explorer, then from the top menu pick Build -> BuildSurfCli
   * Or, using the .NET Core SDK, you can perform these steps from the command line
-    * Open a command prompt, navigate to the ChannelSurfCli folder 
-	 * dotnet restore
-	 * dotnet build
+    * Open a command prompt, and navigate to the ChannelSurfCli folder 
+      * dotnet restore
+      * dotnet build
 
 ## Using ChannelSurfCli
  
-* Launch the Microsot Teams app and make sure you are a member of an existing Team.  If not - create a Team!
-* Open a command prompt, navigate to the ChannelSurfCli folder
+* Launch the Microsoft Teams app and make sure you are a member of an existing Team.  If not - create a Team!
+* Open a command prompt, and navigate to the ChannelSurfCli folder
 * Run one of the two following commands, based on whether you're creating channels from a JSON file or a Slack Teams export
- * dotnet run /path/to/channels.json
- * dotnet run /path/to/slack/archive/myexport.zip (i.e. whatever you may have re-named your Slack Team export)
-* Provide your Active Directory Tenant Name and Application ID if prompted
+   * dotnet run /path/to/channels.json
+   * dotnet run /path/to/slack/archive/myexport.zip (replace myexport.zip with your archive filename)
+* If prompted, provide your Active Directory Tenant Name and Application Id
 * Follow the instructions provided to sign in: start a web browser, enter the security code provided, and then your O365 credentials.  We strongly suggest you use your web browser's "private mode".
-* After you login through the web browser return to your command prompt 
+* After you login through the web browser, return to your command prompt 
 * Select the target Microsoft Team you want to create or re-create your channels into.
 * Go back to the Microsoft Team app and explore the channels you added!
 
