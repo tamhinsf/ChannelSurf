@@ -51,11 +51,11 @@ You must register this application in the Azure Active Directory tenant associat
      * Click Select
      * Click Done
 	
-* Applications built using the Graph API permissions above require administrative consent before non-administrative users can sign in - which fortunately, you'll only need to do once.  
-  * You can immediately provide consent to all users in your organization using the Azure Portal. Click the "Grant permissions" button, which you can reach via your app's "Required permissions" link.
-    * Here's the full path to "Grant permissions": Azure Active Directory -> App registrations -> Your app (i.e. ChannelSurfCli) -> All settings ->  Required permissions -> Grant permissions
-  * Or, whenever you successfully launch ChannelSurfCli, we'll show you the URL you can visit to provide admin consent.  Sign in as the admin for the O365 tenant you've configured Channel Surf CLI to work with. 
-    * Note: if you've configured the re-direct URL to be the same value as we've shown you on this page (i.e. https://channelsurf-cli), you'll be sent to an invalid page after successfully signing in.  Don't worry!
+  * If you plan to run Channel Surf as a non-administrator: applications built using the Graph API permissions above require administrative consent before non-administrative users can sign in - which fortunately, you'll only need to do once.  
+    * You can immediately provide consent to all users in your organization using the Azure Portal. Click the "Grant permissions" button, which you can reach via your app's "Required permissions" link.
+      * Here's the full path to "Grant permissions": Azure Active Directory -> App registrations -> Your app (i.e. ChannelSurfCli) -> All settings ->  Required permissions -> Grant permissions
+    * Or, whenever you successfully launch ChannelSurfCli, we'll show you a URL that an administrative user can visit to provide consent.
+      * Note: if you've configured the re-direct URL to be the same value as we've shown you on this page (i.e. https://channelsurf-cli), you'll be sent to an invalid page after successfully signing in.  Don't worry!
 * Take note of your tenant name, which is typically in the form of your-domain.onmicrosoft.com.  You'll need to supply this when building or running ChannelSurfCli.
 
 
