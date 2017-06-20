@@ -10,7 +10,7 @@ Use the Microsoft Teams app to create the Team you want to place your re-created
 	You'll edit a file called "channels.json" that contains the name and description of the channels you want to create.
 * Re-create Slack channels
 	
-	You can create a Slack Team export on a self-service basis as a Slack Team Owner or Admin.  Download the export file and tell Channel Surf its location.   We'll scan it and re-create the Slack channel structure in Teams.  It's that easy!
+	You can create a Slack Team export on a self-service basis as a Slack Team Owner or Admin at this page [https://my.slack.com/services/export](https://my.slack.com/services/export).  Download the export file and tell Channel Surf its location.   We'll scan it and re-create the Slack channel structure in Teams.  It's that easy!
 
 NOTE: Channel Surf uses features of the Microsoft Graph currently in preview (beta).  You may encounter unexpected errors and changes in behavior.  We'll do our best to keep up.
 
