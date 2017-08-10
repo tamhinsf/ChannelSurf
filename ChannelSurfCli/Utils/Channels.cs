@@ -100,7 +100,7 @@ namespace ChannelSurfCli.Utils
                 // this might break on some platforms
                 dynamic slackChannelAsMsChannelObject = new JObject();
                 slackChannelAsMsChannelObject.displayName = v.channelName;
-                slackChannelAsMsChannelObject.displayDescription = v.channelDescription;
+                slackChannelAsMsChannelObject.description = v.channelDescription;
 
                 var createTeamsChannelPostData = JsonConvert.SerializeObject(slackChannelAsMsChannelObject);
                 var httpResponseMessage =
