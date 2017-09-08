@@ -14,6 +14,7 @@
             public string attachmentId { get; set; }
             public string attachmentUrl { get; set; }
             public string attachmentChannelId { get; set; }
+            public string attachmentFileName {get;set;}
         }
 
 

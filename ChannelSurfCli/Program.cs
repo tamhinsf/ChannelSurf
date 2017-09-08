@@ -4,21 +4,18 @@ using Microsoft.IdentityModel.Clients.ActiveDirectory;
 using System.Globalization;
 using System.Collections.Generic;
 using ChannelSurfCli.Models;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Configuration.EnvironmentVariables;
+using System.Reflection;
 
 namespace ChannelSurfCli
 {
 
     class Program
     {
+        // all of your per-tenant and per-environment settings are (now) in appsettings.json
 
-        // Replace these values with the name of your Azure AD Tenant and 
-        // the application ID of the client you registered in Azure AD for use
-        // with this program.  If you don't supply these values here, we'll ask 
-        // you for them when you run this app.
-
-
-        static string aadTenant = "";
-        static string aadAppClientId = "";
+        public static IConfigurationRoot Configuration { get; set; }
 
         // Don't change this constant
         // It is a constant that corresponds to fixed values in AAD that corresponds to Microsoft Graph
@@ -28,9 +25,6 @@ namespace ChannelSurfCli
         // Read and write all groups
 
         const string aadResourceAppId = "00000003-0000-0000-c000-000000000000";
-        const string aadRedirectUri = "https://channelsurf-cli";
-
-        const string aadInstance = "https://login.microsoftonline.com/{0}";
 
         static AuthenticationContext authenticationContext = null;
         static AuthenticationResult authenticationResult = null;
@@ -41,8 +35,7 @@ namespace ChannelSurfCli
             string slackArchiveTempPath = "";
             string channelsPath = "";
             bool channelsOnly = false;
-
-            List<Slack.Channels> slackChannelsToMigrate = new List<Slack.Channels>();
+            bool dbMigrate = false;
 
             Console.CancelKeyPress += delegate (object sender, ConsoleCancelEventArgs e)
             {
@@ -61,6 +54,16 @@ namespace ChannelSurfCli
 
             if (args.Length > 0)
             {
+
+                // retreive settings from appsettings.json instead of hard coding them here
+
+                var builder = new ConfigurationBuilder()
+                    .SetBasePath(Directory.GetCurrentDirectory())
+                    .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
+                    .AddEnvironmentVariables();
+                Configuration = builder.Build();
+
+
                 Console.WriteLine("");
                 Console.WriteLine("****************************************************************************************************");
                 Console.WriteLine("Welcome to Channel Master!");
@@ -70,7 +73,7 @@ namespace ChannelSurfCli
                 Console.WriteLine("****************************************************************************************************");
                 Console.WriteLine("");
 
-                while (aadTenant == "" || aadAppClientId == "")
+                while (Configuration["AzureAd:TenantId"] == "" || Configuration["AzureAd:ClientId"] == "")
                 {
                     Console.WriteLine("");
                     Console.WriteLine("****************************************************************************************************");
@@ -78,22 +81,22 @@ namespace ChannelSurfCli
                     Console.WriteLine("use with application to continue.  You can do this by altering Program.cs and re-compiling this app.");
                     Console.WriteLine("Or, you can provide it right now.");
                     Console.Write("Azure Active Directory Tenant Name (i.e your-domain.onmicrosoft.com): ");
-                    aadTenant = Console.ReadLine();
+                    Configuration["AzureAd:TenantId"] = Console.ReadLine();
                     Console.Write("Azure Active Directory Application ID: ");
-                    aadAppClientId = Console.ReadLine();
+                    Configuration["AzureAd:ClientId"] = Console.ReadLine();
                 Console.WriteLine("****************************************************************************************************");
                 }
 
                 Console.WriteLine("**************************************************");
-                Console.WriteLine("Tenant is " + aadTenant);
-                Console.WriteLine("Application ID is " + aadAppClientId);
-                Console.WriteLine("Redirect URI is " + aadRedirectUri);
+                Console.WriteLine("Tenant is " + (Configuration["AzureAd:TenantId"]));
+                Console.WriteLine("Application ID is " + (Configuration["AzureAd:ClientId"]));
+                Console.WriteLine("Redirect URI is " + (Configuration["AzureAd:AadRedirectUri"]));
                 Console.WriteLine("**************************************************");
 
                 Console.WriteLine("");
                 Console.WriteLine("****************************************************************************************************");
                 Console.WriteLine("Your tenant admin consent URL is https://login.microsoftonline.com/common/oauth2/authorize?response_type=id_token" +
-                    "&client_id=" + aadAppClientId + "&redirect_uri=" + aadRedirectUri + "&prompt=admin_consent" + "&nonce=" + Guid.NewGuid().ToString());
+                    "&client_id=" + Configuration["AzureAd:ClientId"] + "&redirect_uri=" + Configuration["AzureAd:AadRedirectUri"] + "&prompt=admin_consent" + "&nonce=" + Guid.NewGuid().ToString());
                 Console.WriteLine("****************************************************************************************************");
                 Console.WriteLine("");
 
@@ -134,11 +137,11 @@ namespace ChannelSurfCli
                 }
 
                 Console.WriteLine("Scanning channels.json");
-                slackChannelsToMigrate = Utils.Channels.ScanSlackChannelsJson(channelsPath);
+                var slackChannelsToMigrate = Utils.Channels.ScanSlackChannelsJson(channelsPath);
                 Console.WriteLine("Scanning channels.json - done");
 
                 Console.WriteLine("Creating channels in MS Teams");
-                var msTeamsChannelsWithSlackProps = Utils.Channels.CreateChannelsInMsTeams(aadAccessToken, selectedTeamId, slackChannelsToMigrate);
+                var msTeamsChannelsWithSlackProps = Utils.Channels.CreateChannelsInMsTeams(aadAccessToken, selectedTeamId, slackChannelsToMigrate, slackArchiveTempPath);
                 Console.WriteLine("Creating channels in MS Teams - done");
 
                 if (channelsOnly)
@@ -146,28 +149,27 @@ namespace ChannelSurfCli
                     Environment.Exit(0);
                 }
 
-                return;
+                Console.WriteLine("Scanning users in Slack archive");
+                var slackUserList = Utils.Users.ScanUsers(Path.Combine(slackArchiveBasePath, "users.json"));
+                Console.WriteLine("Scanning users in Slack archive - done");
 
-                // Uncomment the remainder of this "if" block, if you want to upload files associated with
-                // your Slack channel archive to the corresponding re-created Microsoft Team channel
-          
-                //Console.Write("Test Feature - Upload Slack message attachments to MS Teams? (y/n):");
-                //var uploadAnswer = Console.ReadLine();
-                //if (uploadAnswer.StartsWith("n", StringComparison.CurrentCultureIgnoreCase))
-                //{
-                //    Utils.Files.CleanUpTempDirectoriesAndFiles(slackArchiveTempPath);
-                //    Environment.Exit(0);
-                //}
+                Console.WriteLine("Scanning messages in Slack channels");
+                var attachmentList = Utils.Messages.ScanMessagesByChannel(msTeamsChannelsWithSlackProps, slackArchiveTempPath, slackUserList, aadAccessToken, selectedTeamId);
+                Console.WriteLine("Scanning messages in Slack channels - done");
 
-                //Console.WriteLine("Scanning messages in Slack channels for attachments");
-                //var attachmentList = Utils.Attachments.ScanSlackChannelsForAttachments(slackArchiveTempPath, msTeamsChannelsWithSlackProps);
-                //Console.WriteLine("Scanning messages in Slack channels for attachments - done");
+                Console.Write("Test Feature - Upload Slack message attachments to MS Teams? (y/n):");
+                var uploadAnswer = Console.ReadLine();
+                if (uploadAnswer.StartsWith("y", StringComparison.CurrentCultureIgnoreCase))
+                {
+                    Console.WriteLine("Uploading attachments to MS Teams channels");
+                    Utils.FileAttachments.ArchiveMessageFileAttachments(aadAccessToken, selectedTeamId, attachmentList, "fileattachments", 10).Wait();
+                    Console.WriteLine("Uploading attachments to MS Teams channels - done");
+                }
 
-                //Console.WriteLine("Uploading attachments to MS Teams channels");
-                //Utils.Attachments.ArchiveMessageAttachments(aadAccessToken, selectedTeamId, attachmentList, 10).Wait();
-                //Console.WriteLine("Uploading attachments to MS Teams channels - done");
+                Console.WriteLine("Tasks complete.  Press any key to exit");
+                Console.ReadKey();
 
-                //Utils.Files.CleanUpTempDirectoriesAndFiles(slackArchiveTempPath);
+                Utils.Files.CleanUpTempDirectoriesAndFiles(slackArchiveTempPath);
             }
             else
             {
@@ -179,9 +181,9 @@ namespace ChannelSurfCli
         static AuthenticationResult UserLogin()
         {
             authenticationContext = new AuthenticationContext
-                    (String.Format(CultureInfo.InvariantCulture, aadInstance, aadTenant));
+                    (String.Format(CultureInfo.InvariantCulture, Configuration["AzureAd:AadInstance"], Configuration["AzureAd:TenantId"]));
             authenticationContext.TokenCache.Clear();
-            DeviceCodeResult deviceCodeResult = authenticationContext.AcquireDeviceCodeAsync(aadResourceAppId, aadAppClientId).Result;
+            DeviceCodeResult deviceCodeResult = authenticationContext.AcquireDeviceCodeAsync(aadResourceAppId, (Configuration["AzureAd:ClientId"])).Result;
             Console.WriteLine(deviceCodeResult.Message);
             return authenticationContext.AcquireTokenByDeviceCodeAsync(deviceCodeResult).Result;
         }

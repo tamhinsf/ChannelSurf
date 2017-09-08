@@ -42,6 +42,13 @@ namespace ChannelSurfCli.Utils
                             channelName = obj["name"].ToString(),
                             channelDescription = obj["purpose"]["value"].ToString()
                         });
+
+                        // artificially limit the number of channels scanned as to make testing go faster
+
+                        if (slackChannels.Count > 10)
+                        {
+                            return slackChannels;
+                        }
                     }
                 }
             }
@@ -56,8 +63,7 @@ namespace ChannelSurfCli.Utils
             Helpers.httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", aadAccessToken);
             Helpers.httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
 
-            var httpResponseMessage =
-            Helpers.httpClient.GetAsync(O365.MsGraphBetaEndpoint + "groups/" + teamId + "/channels").Result;
+            var httpResponseMessage = Helpers.httpClient.GetAsync(O365.MsGraphBetaEndpoint + "groups/" + teamId + "/channels").Result;
             if (httpResponseMessage.IsSuccessStatusCode)
             {
                 var httpResultString = httpResponseMessage.Content.ReadAsStringAsync().Result;
@@ -68,9 +74,11 @@ namespace ChannelSurfCli.Utils
         }
 
         public static List<Combined.ChannelsMapping>
-                                 CreateChannelsInMsTeams(string aadAccessToken, string teamId, List<Slack.Channels> slackChannels)
+                                 CreateChannelsInMsTeams(string aadAccessToken, string teamId, List<Slack.Channels> slackChannels, string basePath)
         {
             List<Combined.ChannelsMapping> combinedChannelsMapping = new List<Combined.ChannelsMapping>();
+
+            // Get the list of existing channels in this team, so we don't try to re-create them
 
             var msTeamsChannel = GetExistingChannelsInMsTeams(aadAccessToken, teamId);
 
@@ -81,6 +89,10 @@ namespace ChannelSurfCli.Utils
             foreach (var v in slackChannels)
             {
                 var existingMsTeams = msTeamsChannel.Find(w => String.Equals(w.displayName, v.channelName, StringComparison.CurrentCultureIgnoreCase));
+
+                // if a channel with the same name exists, don't attempt a create
+                // however, read that channel's metadata so you can map it to its Slack equivalent
+
                 if (existingMsTeams != null)
                 {
                     Console.WriteLine("This channel already exists in MS Teams: " + v.channelName);
@@ -116,22 +128,38 @@ namespace ChannelSurfCli.Utils
                 {
                     var createdMsTeamsChannel = JsonConvert.DeserializeObject<MsTeams.Channel>(httpResponseMessage.Content.ReadAsStringAsync().Result);
 
+                    var channelDriveItemId = CreateMsTeamsChannelFolder(aadAccessToken, teamId, createdMsTeamsChannel.displayName);
+
                     combinedChannelsMapping.Add(new Combined.ChannelsMapping()
                     {
                         id = createdMsTeamsChannel.id,
                         displayName = createdMsTeamsChannel.displayName,
                         description = createdMsTeamsChannel.description,
                         slackChannelId = v.channelId,
-                        slackChannelName = v.channelName
+                        slackChannelName = v.channelName,
+                        folderId = channelDriveItemId                        
                     });
-                    CreateMsTeamsChannelFolder(aadAccessToken, teamId, createdMsTeamsChannel.displayName);
                 }
                 Thread.Sleep(2000); // pathetic attempt to prevent throttling
             }
+            CreateCombinedChannelsMappingFile(combinedChannelsMapping, aadAccessToken, teamId, basePath);
             return combinedChannelsMapping;
         }
 
-        public static bool CreateMsTeamsChannelFolder(string aadAccessToken, string teamId, string channelName)
+        static void CreateCombinedChannelsMappingFile(List<Models.Combined.ChannelsMapping> channelsMapping, String aadAccessToken, string selectedTeamId, string basePath)
+        {
+            var jsonFileName = Path.Combine(basePath, "combinedChannelsMapping.json");
+            using (FileStream fs = new FileStream(jsonFileName, FileMode.Create))
+            {
+                using (StreamWriter w = new StreamWriter(fs, Encoding.UTF8))
+                {
+                     w.WriteLine(JsonConvert.SerializeObject(channelsMapping));
+                }
+            }
+            Utils.FileAttachments.UploadFileToTeamsChannel(aadAccessToken, selectedTeamId, jsonFileName, "", "", "combinedChannelsMapping.json").Wait();
+        }
+
+        public static string CreateMsTeamsChannelFolder(string aadAccessToken, string teamId, string channelName)
         {
             var authHelper = new O365.AuthenticationHelper() { AccessToken = aadAccessToken };
             Microsoft.Graph.GraphServiceClient gcs = new Microsoft.Graph.GraphServiceClient(authHelper);
@@ -144,13 +172,13 @@ namespace ChannelSurfCli.Utils
             try
             {
                 var result = gcs.Groups[teamId].Drive.Root.Children.Request().AddAsync(driveItem).Result;
-                Console.WriteLine("Folder ID is " + result.Id);
-                return true;
+                Console.WriteLine("Folder ID is " + result.Id + " with path " + result.WebUrl);
+                return result.Id;
             }
             catch (Exception ex)
             {
                 Console.WriteLine("Folder creation failure: " + ex.InnerException);
-                return false;
+                return "";
             }
         }
 

@@ -6,7 +6,6 @@
         {
             public string slackChannelId { get; set; }
             public string slackChannelName { get; set; }
-            public string teamsFolderId { get; set; }
         }
 
         public class AttachmentsMapping : Slack.Attachments
