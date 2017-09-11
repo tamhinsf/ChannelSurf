@@ -61,7 +61,7 @@ namespace ChannelSurfCli.Utils
                 {
                     fileToUpload = combinedAttachmentsMapping.attachmentUrl;
                 }
-                var pathToItem = "/" + combinedAttachmentsMapping.msChannelName + "/fileattachments/" + combinedAttachmentsMapping.attachmentId + "/" + combinedAttachmentsMapping.attachmentFileName;
+                var pathToItem = "/" + combinedAttachmentsMapping.msChannelName + "/channelsurf/fileattachments/" + combinedAttachmentsMapping.attachmentId + "/" + combinedAttachmentsMapping.attachmentFileName;
                 fileIdAndUrl = await UploadFileToTeamsChannel(aadAccessToken, selectedTeamId, fileToUpload, pathToItem);
                 combinedAttachmentsMapping.msSpoId = fileIdAndUrl.Item1;
                 combinedAttachmentsMapping.msSpoUrl = fileIdAndUrl.Item2;
