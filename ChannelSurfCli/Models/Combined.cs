@@ -12,6 +12,8 @@
         {
             public string msChannelName { get; set; }
             public string msChannelId { get; set; }
+            public string msSpoId { get;set;}
+            public string msSpoUrl {get;set;}
         }
     }
 }

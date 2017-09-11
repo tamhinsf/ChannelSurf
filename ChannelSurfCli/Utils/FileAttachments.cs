@@ -24,8 +24,8 @@ namespace ChannelSurfCli.Utils
             foreach (var v in combinedAttachmentsMapping)
             {
                 // await here until there is a room for this task
-                await semaphore.WaitAsync();
-                tasks.Add(GetAndUploadFileToTeamsChannel(aadAccessToken, selectedTeamId, semaphore, v, channelSubFolder));
+                await semaphore.WaitAsync(); 
+                tasks.Add(GetAndUploadFileToTeamsChannel(aadAccessToken, selectedTeamId, semaphore, v, channelSubFolder));                
             }
 
             // await for the rest of tasks to complete
@@ -34,6 +34,8 @@ namespace ChannelSurfCli.Utils
 
         static async Task GetAndUploadFileToTeamsChannel(String aadAccessToken, String selectedTeamId, SemaphoreSlim semaphore, Combined.AttachmentsMapping combinedAttachmentsMapping, string channelSubFolder)
         {
+            //string fileId = "";
+            Tuple<string,string> fileIdAndUrl;
             try
             {
                 string fileToUpload = "";
@@ -59,7 +61,10 @@ namespace ChannelSurfCli.Utils
                 {
                     fileToUpload = combinedAttachmentsMapping.attachmentUrl;
                 }
-                await UploadFileToTeamsChannel(aadAccessToken, selectedTeamId, fileToUpload, combinedAttachmentsMapping.msChannelName, channelSubFolder, combinedAttachmentsMapping.attachmentFileName, combinedAttachmentsMapping.attachmentId);
+                var pathToItem = "/" + combinedAttachmentsMapping.msChannelName + "/fileattachments/" + combinedAttachmentsMapping.attachmentId + "/" + combinedAttachmentsMapping.attachmentFileName;
+                fileIdAndUrl = await UploadFileToTeamsChannel(aadAccessToken, selectedTeamId, fileToUpload, pathToItem);
+                combinedAttachmentsMapping.msSpoId = fileIdAndUrl.Item1;
+                combinedAttachmentsMapping.msSpoUrl = fileIdAndUrl.Item2;
                 File.Delete(fileToUpload);
                 Console.WriteLine("Deleting local copy of attachment " + combinedAttachmentsMapping.attachmentId);
             }
@@ -74,9 +79,10 @@ namespace ChannelSurfCli.Utils
                 // don't forget to release
                 semaphore.Release();
             }
+            return;
         }
 
-        static bool CheckIfFileExistsOnTeamsChannel(string aadAccessToken, string selectedTeamId, string channelName, string channelSubFolder, string fileName, string fileId = "")
+        public static Tuple<string,string> CheckIfFileExistsOnTeamsChannel(string aadAccessToken, string selectedTeamId, string pathToItem)
         {
             var authHelper = new Utils.O365.AuthenticationHelper() { AccessToken = aadAccessToken };
             Microsoft.Graph.GraphServiceClient gcs = new Microsoft.Graph.GraphServiceClient(authHelper);
@@ -84,7 +90,7 @@ namespace ChannelSurfCli.Utils
             Microsoft.Graph.DriveItem fileExistsResult = null;
             try
             {
-                fileExistsResult = gcs.Groups[selectedTeamId].Drive.Root.ItemWithPath("/" + channelName + "/channelsurf/" + channelSubFolder + "/" + fileId + "/" + fileName).
+                fileExistsResult = gcs.Groups[selectedTeamId].Drive.Root.ItemWithPath(pathToItem).
                                     Request().GetAsync().Result;
             }
             catch
@@ -94,39 +100,31 @@ namespace ChannelSurfCli.Utils
             
             if (fileExistsResult == null)
             {
-                return false;
+                return new Tuple<string,string>("","");
             }
-            Console.WriteLine("Attachment already exists.  We won't replace it. " + fileId);
-            return true;
+            Console.WriteLine("Attachment already exists.  We won't replace it. " + pathToItem);
+            return new Tuple<string,string>(fileExistsResult.Id,fileExistsResult.WebUrl);
         }
 
-        public static async Task UploadFileToTeamsChannel(string aadAccessToken, string selectedTeamId, string filePath, string channelName, string channelSubFolder, string fileName, string fileId = "")
+        public static async Task<Tuple<string,string>> UploadFileToTeamsChannel(string aadAccessToken, string selectedTeamId, string filePath, string pathToItem) 
         {
             var authHelper = new Utils.O365.AuthenticationHelper() { AccessToken = aadAccessToken };
             Microsoft.Graph.GraphServiceClient gcs = new Microsoft.Graph.GraphServiceClient(authHelper);
 
-            var fileExists = CheckIfFileExistsOnTeamsChannel(aadAccessToken, selectedTeamId, channelName, channelSubFolder, fileName, fileId);
-            if (fileExists) 
+            var fileExists = CheckIfFileExistsOnTeamsChannel(aadAccessToken, selectedTeamId, pathToItem);
+            if (fileExists.Item1 != "") 
             {
-                return;
+                return new Tuple<string,string>(fileExists.Item1,fileExists.Item2);
             }
 
             Microsoft.Graph.UploadSession uploadSession = null;
 
-            if(channelName == "")
-            {
-            uploadSession = await gcs.Groups[selectedTeamId].Drive.Root.ItemWithPath("/channelsurf/" + fileName).
-                                  CreateUploadSession().Request().PostAsync();
-            }
-            else
-            {
-            uploadSession = await gcs.Groups[selectedTeamId].Drive.Root.ItemWithPath("/" + channelName + "/" + "/channelsurf/"+ channelSubFolder + "/" + fileId + "/" + fileName).
-                                  CreateUploadSession().Request().PostAsync();
-            }
+            uploadSession = await gcs.Groups[selectedTeamId].Drive.Root.ItemWithPath(pathToItem).
+                CreateUploadSession().Request().PostAsync();
 
             try
             {
-                Console.WriteLine("Trying to upload attachment to MS Teams " + fileId);
+                Console.WriteLine("Trying to upload file to MS Teams SPo Folder " + filePath);
                 using (FileStream fs = new FileStream(filePath, FileMode.Open, FileAccess.Read))
                 {
                     //upload a file in a single shot.  this is great if all files are below the allowed maximum size for a single shot upload.
@@ -159,15 +157,17 @@ namespace ChannelSurfCli.Utils
                             itemResult = result.ItemResponse;
                         }
                     }
+                    Console.WriteLine("Upload of attachment to MS Teams completed " + pathToItem);
+                    Console.WriteLine("SPo ID is " + itemResult.Id);
+                    return new Tuple<string,string>(itemResult.Id, itemResult.WebUrl);
                 }
-                Console.WriteLine("Upload of attachment to MS Teams completed " + fileId);
             }
             catch (Exception ex)
             {
                 Console.WriteLine("Error: attachment could not be uploaded" + ex.InnerException);
             }
 
-            return;
+            return new Tuple<string, string>("","");
         }
     }
 }

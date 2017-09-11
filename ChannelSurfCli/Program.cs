@@ -157,14 +157,14 @@ namespace ChannelSurfCli
                 var attachmentList = Utils.Messages.ScanMessagesByChannel(msTeamsChannelsWithSlackProps, slackArchiveTempPath, slackUserList, aadAccessToken, selectedTeamId);
                 Console.WriteLine("Scanning messages in Slack channels - done");
 
-                Console.Write("Test Feature - Upload Slack message attachments to MS Teams? (y/n):");
-                var uploadAnswer = Console.ReadLine();
-                if (uploadAnswer.StartsWith("y", StringComparison.CurrentCultureIgnoreCase))
-                {
-                    Console.WriteLine("Uploading attachments to MS Teams channels");
-                    Utils.FileAttachments.ArchiveMessageFileAttachments(aadAccessToken, selectedTeamId, attachmentList, "fileattachments", 10).Wait();
-                    Console.WriteLine("Uploading attachments to MS Teams channels - done");
-                }
+                // Console.Write("Test Feature - Upload Slack message attachments to MS Teams? (y/n):");
+                // var uploadAnswer = Console.ReadLine();
+                // if (uploadAnswer.StartsWith("y", StringComparison.CurrentCultureIgnoreCase))
+                // {
+                //     Console.WriteLine("Uploading attachments to MS Teams channels");
+                //     Utils.FileAttachments.ArchiveMessageFileAttachments(aadAccessToken, selectedTeamId, attachmentList, "fileattachments", 10).Wait();
+                //     Console.WriteLine("Uploading attachments to MS Teams channels - done");
+                // }
 
                 Console.WriteLine("Tasks complete.  Press any key to exit");
                 Console.ReadKey();

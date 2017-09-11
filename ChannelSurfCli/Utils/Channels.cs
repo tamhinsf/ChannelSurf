@@ -95,14 +95,21 @@ namespace ChannelSurfCli.Utils
 
                 if (existingMsTeams != null)
                 {
-                    Console.WriteLine("This channel already exists in MS Teams: " + v.channelName);
+                    Console.WriteLine("This channel already exists in MS Teams: " + existingMsTeams.displayName);
+
+                    // get the existing folder id or create and get the folder id by making an api call
+                    // the function below handles both the check for existing and creation of new folder if needed
+
+                    var channelDriveItemId = CreateMsTeamsChannelFolder(aadAccessToken, teamId, existingMsTeams.displayName);
+
                     combinedChannelsMapping.Add(new Combined.ChannelsMapping()
                     {
                         id = existingMsTeams.id,
                         displayName = v.channelName,
                         description = existingMsTeams.description,
                         slackChannelId = v.channelId,
-                        slackChannelName = v.channelName
+                        slackChannelName = v.channelName,
+                        folderId = channelDriveItemId
                     });
                     continue;
                 }
@@ -156,11 +163,19 @@ namespace ChannelSurfCli.Utils
                      w.WriteLine(JsonConvert.SerializeObject(channelsMapping));
                 }
             }
-            Utils.FileAttachments.UploadFileToTeamsChannel(aadAccessToken, selectedTeamId, jsonFileName, "", "", "combinedChannelsMapping.json").Wait();
+            Utils.FileAttachments.UploadFileToTeamsChannel(aadAccessToken, selectedTeamId, jsonFileName, "/channelsurf/combinedChannelsMapping.json").Wait();
         }
 
         public static string CreateMsTeamsChannelFolder(string aadAccessToken, string teamId, string channelName)
         {
+
+            Tuple<string,string> fileExists = Utils.FileAttachments.CheckIfFileExistsOnTeamsChannel(aadAccessToken, teamId, "/" + channelName);
+            if (fileExists.Item1 != "") 
+            {
+                Console.WriteLine("Channel folder exists " + fileExists);
+                return fileExists.Item1;
+            }
+
             var authHelper = new O365.AuthenticationHelper() { AccessToken = aadAccessToken };
             Microsoft.Graph.GraphServiceClient gcs = new Microsoft.Graph.GraphServiceClient(authHelper);
 

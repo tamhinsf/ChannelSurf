@@ -23,6 +23,9 @@ namespace ChannelSurfCli.ViewModels
             public string originalName { get; set; }
             public string originalTitle { get; set; }
             public string originalUrl { get; set; }
+            
+            public string spoId {get;set;}
+            public string spoUrl {get;set;}
         }
 
         public class Attachments

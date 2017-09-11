@@ -168,7 +168,7 @@ namespace ChannelSurfCli.Utils
                                 attachmentsList = null;
                             }
 
-                            // do some stuff with threading at some point
+                            // do some stuff with slack message threading at some point
 
                             messageList.Add(new ViewModels.SimpleMessage
                             {
@@ -185,6 +185,19 @@ namespace ChannelSurfCli.Utils
                 }
             }
 
+            Utils.FileAttachments.ArchiveMessageFileAttachments(aadAccessToken,selectedTeamId,attachmentsToUpload,"fileattachments").Wait();
+            foreach(var messageItem in messageList)
+            {
+                if(messageItem.fileAttachment != null)
+                {
+                    var messageItemWithFileAttachment = attachmentsToUpload.Find(w => String.Equals(messageItem.fileAttachment.id,w.attachmentId,StringComparison.CurrentCultureIgnoreCase));
+                    if(messageItemWithFileAttachment != null)
+                    {
+                        messageItem.fileAttachment.spoId = messageItemWithFileAttachment.msSpoId;
+                        messageItem.fileAttachment.spoUrl= messageItemWithFileAttachment.msSpoUrl;
+                    }
+                }
+            }
             Utils.Messages.CreateSlackMessageJsonArchiveFile(basePath, channelsMapping, messageList, aadAccessToken, selectedTeamId);
             Utils.Messages.CreateSlackMessageHtmlArchiveFile(basePath, channelsMapping, messageList, aadAccessToken, selectedTeamId);
 
@@ -217,7 +230,8 @@ namespace ChannelSurfCli.Utils
                         w.WriteLine(jsonObjectsToSave);
                     }
                 }
-                Utils.FileAttachments.UploadFileToTeamsChannel(aadAccessToken, selectedTeamId, Path.Combine(basePath, channelsMapping.slackChannelName, filenameToAdd), channelsMapping.displayName, "messages/json", filenameToAdd).Wait();
+                var pathToItem = "/" + channelsMapping.displayName + "/channelsurf/" + "messages/json" + "/" + filenameToAdd;
+                Utils.FileAttachments.UploadFileToTeamsChannel(aadAccessToken, selectedTeamId, Path.Combine(basePath, channelsMapping.slackChannelName, filenameToAdd), pathToItem).Wait();
             }
             return;
         }
@@ -254,7 +268,8 @@ namespace ChannelSurfCli.Utils
                         w.WriteLine(fileBody);
                     }
                 }
-                Utils.FileAttachments.UploadFileToTeamsChannel(aadAccessToken, selectedTeamId, Path.Combine(basePath, channelsMapping.slackChannelName, filenameToAdd), channelsMapping.displayName, "messages/html", filenameToAdd).Wait();
+                var pathToItem = "/" + channelsMapping.displayName + "/channelsurf/" + "messages/html" + "/" + filenameToAdd;
+                Utils.FileAttachments.UploadFileToTeamsChannel(aadAccessToken, selectedTeamId, Path.Combine(basePath, channelsMapping.slackChannelName, filenameToAdd), pathToItem).Wait();
             }
 
             return;
@@ -277,7 +292,8 @@ namespace ChannelSurfCli.Utils
             {
                 w += "<div style=\"margin-left:1%;margin-top:1%;border-left-style:solid;border-left-color:LightGrey;\">";
                 w += "<div style=\"margin-left:1%;\">";
-                w += "<span style=\"font-weight:lighter;\"> <a href=\"" + "/" + channelsMapping.displayName + "/channelsurf/fileattachments/" + simpleMessage.fileAttachment.id + "/" + simpleMessage.fileAttachment.originalName + "\"> File Attachment </a> </span>";
+                w += "<span style=\"font-weight:lighter;\"> <a href=\"" + simpleMessage.fileAttachment.spoUrl + "\"> File Attachment </a> </span>";
+                // w += "<span style=\"font-weight:lighter;\"> <a href=\"" + "/" + channelsMapping.displayName + "/channelsurf/fileattachments/" + simpleMessage.fileAttachment.id + "/" + simpleMessage.fileAttachment.originalName + "\"> File Attachment </a> </span>";
                 w += "<div>";
                 w += "<span style=\"font-weight:lighter;\"> ";
                 w += simpleMessage.fileAttachment.originalTitle + "<br/>";
