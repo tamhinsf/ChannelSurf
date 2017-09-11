@@ -12,14 +12,14 @@ namespace ChannelSurfCli.Utils
     public class Messages
     {
         public static List<Models.Combined.AttachmentsMapping> ScanMessagesByChannel(List<Models.Combined.ChannelsMapping> channelsMapping, string basePath,
-            List<ViewModels.SimpleUser> slackUserList, String aadAccessToken, String selectedTeamId, bool dbMigrate = false)
+            List<ViewModels.SimpleUser> slackUserList, String aadAccessToken, String selectedTeamId)
         {
             List<Models.Combined.AttachmentsMapping> attachmentsToUpload = new List<Models.Combined.AttachmentsMapping>();
             attachmentsToUpload.Clear();
 
             foreach (var v in channelsMapping)
             {
-                var channelAttachmentsToUpload = GetAndUploadMessages(v, basePath, slackUserList, aadAccessToken, selectedTeamId, dbMigrate);
+                var channelAttachmentsToUpload = GetAndUploadMessages(v, basePath, slackUserList, aadAccessToken, selectedTeamId);
                 attachmentsToUpload.AddRange(channelAttachmentsToUpload);
             }
 
@@ -28,7 +28,7 @@ namespace ChannelSurfCli.Utils
 
 
         static List<Models.Combined.AttachmentsMapping> GetAndUploadMessages(Models.Combined.ChannelsMapping channelsMapping, string basePath,
-            List<ViewModels.SimpleUser> slackUserList, String aadAccessToken, String selectedTeamId, bool dbMigrate = false)
+            List<ViewModels.SimpleUser> slackUserList, String aadAccessToken, String selectedTeamId)
         {
             var messageList = new List<ViewModels.SimpleMessage>();
             messageList.Clear();

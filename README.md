@@ -37,7 +37,8 @@ You must register this application in the Azure Active Directory tenant associat
 * Within the Azure Portal, select Azure Active Directory -> App registrations -> New application registration  
     * Name: ChannelSurfCli (anything will work - we suggest you keep this value)
     * Application type: Native
-    * Redirect URI: https://channelsurf-cli (anything will work - however, this is the value we have hard-coded into our application code in Program.cs
+    * Redirect URI: https://channelsurf-cli (anything else will work if you want to change it)
+     * NOTE: In earlier versions of this code, we hard-coded this value in Program.cs.  It's now been moved to appsettings.json and we've agained defaulted it to https://channelsurf-cli
     * Click Create
 * Once Azure has created your app, copy your Application Id and give your application access to the required Microsoft Graph API permissions.  
    * Click your app's name (i.e. ChannelSurfCli) from the list of applications
@@ -87,7 +88,8 @@ IMPORTANT: You Slack export contains a security token that can be used by ANYONE
 ## Build ChannelSurfCli
 
 * Open the cloned code from this repository in Visual Studio, Visual Studio Code, or your favorite editor
- * Update Program.cs in the ChannelSurfCli folder with your tenant name (aadTenant) and Application ID (aadAppClientId) 
+ * Update appsettings.json in the ChannelSurfCli folder.  Within the section called "AzureAd", update the fields with your tenant name (TenantId), Application ID (ClientId), and Redirect URI (AadRedirectUri).  You can leave the value for AadInstance as-is.
+  * NOTE: In previous versions of ChannelSurfCli, these values were stored in Program.cs.  If you're upgrading to this new version, please move your settings into appsettings.json as described above.  
  * Or, you can leave these values empty and provide them whenever you run the application.
 * Build ChannelSurfCli
   * In Visual Studio select ChannelSurfCli from the Solution Explorer, then from the top menu pick Build -> BuildSurfCli
