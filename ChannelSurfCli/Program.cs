@@ -35,6 +35,7 @@ namespace ChannelSurfCli
             string slackArchiveTempPath = "";
             string channelsPath = "";
             bool channelsOnly = false;
+            bool copyFileAttachments = false;
 
             Console.CancelKeyPress += delegate (object sender, ConsoleCancelEventArgs e)
             {
@@ -148,13 +149,25 @@ namespace ChannelSurfCli
                     Environment.Exit(0);
                 }
 
-                Console.WriteLine("Scanning users in Slack archive");
-                var slackUserList = Utils.Users.ScanUsers(Path.Combine(slackArchiveBasePath, "users.json"));
-                Console.WriteLine("Scanning users in Slack archive - done");
+                Console.Write("Create web pages that show the message history for each re-created Slack channel? (y|n): ");
+                var copyMessagesResponse = Console.ReadLine();
+                if(copyMessagesResponse.StartsWith("y", StringComparison.CurrentCultureIgnoreCase))
+                {
+                    Console.Write("Copy files attached to Slack messages to Microsoft Teams? (y|n): ");
+                    var copyFileAttachmentsResponse = Console.ReadLine();
+                    if(copyFileAttachmentsResponse.StartsWith("y", StringComparison.CurrentCultureIgnoreCase))
+                    {
+                        copyFileAttachments = true;
+                    }
+                    
+                    Console.WriteLine("Scanning users in Slack archive");
+                    var slackUserList = Utils.Users.ScanUsers(Path.Combine(slackArchiveBasePath, "users.json"));
+                    Console.WriteLine("Scanning users in Slack archive - done");
 
-                Console.WriteLine("Scanning messages in Slack channels");
-                var attachmentList = Utils.Messages.ScanMessagesByChannel(msTeamsChannelsWithSlackProps, slackArchiveTempPath, slackUserList, aadAccessToken, selectedTeamId);
-                Console.WriteLine("Scanning messages in Slack channels - done");
+                    Console.WriteLine("Scanning messages in Slack channels");
+                    Utils.Messages.ScanMessagesByChannel(msTeamsChannelsWithSlackProps, slackArchiveTempPath, slackUserList, aadAccessToken, selectedTeamId, copyFileAttachments);
+                    Console.WriteLine("Scanning messages in Slack channels - done");
+                }
 
                 Console.WriteLine("Tasks complete.  Press any key to exit");
                 Console.ReadKey();

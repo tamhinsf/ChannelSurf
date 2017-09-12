@@ -11,24 +11,20 @@ namespace ChannelSurfCli.Utils
 {
     public class Messages
     {
-        public static List<Models.Combined.AttachmentsMapping> ScanMessagesByChannel(List<Models.Combined.ChannelsMapping> channelsMapping, string basePath,
-            List<ViewModels.SimpleUser> slackUserList, String aadAccessToken, String selectedTeamId)
+        public static void ScanMessagesByChannel(List<Models.Combined.ChannelsMapping> channelsMapping, string basePath,
+            List<ViewModels.SimpleUser> slackUserList, String aadAccessToken, String selectedTeamId, bool copyFileAttachments)
         {
-            List<Models.Combined.AttachmentsMapping> attachmentsToUpload = new List<Models.Combined.AttachmentsMapping>();
-            attachmentsToUpload.Clear();
-
             foreach (var v in channelsMapping)
             {
-                var channelAttachmentsToUpload = GetAndUploadMessages(v, basePath, slackUserList, aadAccessToken, selectedTeamId);
-                attachmentsToUpload.AddRange(channelAttachmentsToUpload);
+                var channelAttachmentsToUpload = GetAndUploadMessages(v, basePath, slackUserList, aadAccessToken, selectedTeamId, copyFileAttachments);
             }
 
-            return attachmentsToUpload;
+            return;
         }
 
 
         static List<Models.Combined.AttachmentsMapping> GetAndUploadMessages(Models.Combined.ChannelsMapping channelsMapping, string basePath,
-            List<ViewModels.SimpleUser> slackUserList, String aadAccessToken, String selectedTeamId)
+            List<ViewModels.SimpleUser> slackUserList, String aadAccessToken, String selectedTeamId, bool copyFileAttachments)
         {
             var messageList = new List<ViewModels.SimpleMessage>();
             messageList.Clear();
@@ -185,16 +181,20 @@ namespace ChannelSurfCli.Utils
                 }
             }
 
-            Utils.FileAttachments.ArchiveMessageFileAttachments(aadAccessToken,selectedTeamId,attachmentsToUpload,"fileattachments").Wait();
-            foreach(var messageItem in messageList)
+            if(copyFileAttachments)
             {
-                if(messageItem.fileAttachment != null)
+                Utils.FileAttachments.ArchiveMessageFileAttachments(aadAccessToken,selectedTeamId,attachmentsToUpload,"fileattachments").Wait();
+
+                foreach(var messageItem in messageList)
                 {
-                    var messageItemWithFileAttachment = attachmentsToUpload.Find(w => String.Equals(messageItem.fileAttachment.id,w.attachmentId,StringComparison.CurrentCultureIgnoreCase));
-                    if(messageItemWithFileAttachment != null)
+                    if(messageItem.fileAttachment != null)
                     {
-                        messageItem.fileAttachment.spoId = messageItemWithFileAttachment.msSpoId;
-                        messageItem.fileAttachment.spoUrl= messageItemWithFileAttachment.msSpoUrl;
+                        var messageItemWithFileAttachment = attachmentsToUpload.Find(w => String.Equals(messageItem.fileAttachment.id,w.attachmentId,StringComparison.CurrentCultureIgnoreCase));
+                        if(messageItemWithFileAttachment != null)
+                        {
+                            messageItem.fileAttachment.spoId = messageItemWithFileAttachment.msSpoId;
+                            messageItem.fileAttachment.spoUrl= messageItemWithFileAttachment.msSpoUrl;
+                        }
                     }
                 }
             }
@@ -292,8 +292,10 @@ namespace ChannelSurfCli.Utils
             {
                 w += "<div style=\"margin-left:1%;margin-top:1%;border-left-style:solid;border-left-color:LightGrey;\">";
                 w += "<div style=\"margin-left:1%;\">";
-                w += "<span style=\"font-weight:lighter;\"> <a href=\"" + simpleMessage.fileAttachment.spoUrl + "\"> File Attachment </a> </span>";
-                // w += "<span style=\"font-weight:lighter;\"> <a href=\"" + "/" + channelsMapping.displayName + "/channelsurf/fileattachments/" + simpleMessage.fileAttachment.id + "/" + simpleMessage.fileAttachment.originalName + "\"> File Attachment </a> </span>";
+                if(simpleMessage.fileAttachment.spoId != null)
+                {
+                    w += "<span style=\"font-weight:lighter;\"> <a href=\"" + simpleMessage.fileAttachment.spoUrl + "\"> File Attachment </a> </span>";
+                }
                 w += "<div>";
                 w += "<span style=\"font-weight:lighter;\"> ";
                 w += simpleMessage.fileAttachment.originalTitle + "<br/>";
