@@ -1,13 +1,13 @@
 # Channel Surf for Microsoft Teams 
  
-Quickly re-create your existing Slack channel structure, archive Slack messages and file attachments, and bulk create new channels in Microsoft Teams.  Let's get started! 
+Quickly migrate your existing Slack channel structure, create a viewable Slack message and file attachment archive, and bulk add new channels in Microsoft Teams.  Let's get started! 
 
 ## Identify your destination Team
 
 Use the Microsoft Teams app to create the Team you want to place your re-created or new channels within.  Then, decide if you want to:
 * Add entirely new channels 
 	
-	You'll edit a file called "channels.json" that contains the name and description of the channels you want to create.
+	You'll edit a file called "channels.json" that contains the name and description of the channels you want to add.
 * Re-create Slack channels
 	
 	You can create a Slack Team export on a self-service basis as a Slack Team Owner or Admin at this page [https://my.slack.com/services/export](https://my.slack.com/services/export).  Download the export file and tell Channel Surf its location.   We'll scan it and re-create the Slack channel structure in Teams - and give you the option to do more.  
