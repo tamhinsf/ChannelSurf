@@ -1,6 +1,6 @@
 # Channel Surf for Microsoft Teams 
  
-Quickly re-create your existing Slack channel structure, and bulk create new channels in Microsoft Teams.  Let's get started! 
+Quickly re-create your existing Slack channel structure, archive Slack messages and file attachments, and bulk create new channels in Microsoft Teams.  Let's get started! 
 
 ## Identify your destination Team
 
@@ -12,13 +12,17 @@ Use the Microsoft Teams app to create the Team you want to place your re-created
 	
 	You can create a Slack Team export on a self-service basis as a Slack Team Owner or Admin at this page [https://my.slack.com/services/export](https://my.slack.com/services/export).  Download the export file and tell Channel Surf its location.   We'll scan it and re-create the Slack channel structure in Teams - and give you the option to do more.  
 
-  * Copy Slack message history (optional)
+  * Archive Slack message history (optional)
 
-    Want to create HTML files that display the message history for each Slack channel that’s been re-created in Microsoft Teams?  If yes, we'll create a sequentially named set of HTML files, which you can view by launching the Teams app, selecting a re-created Slack channel, opening the Files tab and navigating to this path: channelsurf/messages/html.  Note: a better viewing experience may be coming in the future.  
+    Create HTML files in Microsoft Teams that display the message history for each re-created Slack channel.  To view your HTML message archive, launch the Teams app, select a re-created Slack channel, open the Files tab, and browse to this path: channelsurf/messages/html.  You'll see one or more HTML files that contain your Slack channel messages.  
+    
+    Note: We'll improve the display of user names, date and time stamps, message formatting, and provide a better viewing experience in the future.  We're just getting started!
 
-  * Copy Slack file attachments (optional)
+  * Archive Slack file attachments (optional)
 
-    You can optionally let us copy file attachments associated with Slack messages into the Microsoft Teams folder associated with its re-created channel.  As a bonus, the HTML files that display the message history will link to the copied files.   You an also access these migrated files directly by selecting the re-created channel in the Teams app, going to the Files tab, and navigating to the channelsurf/fileattachments folder.  You'll see subfolders whose name maps to the file attachment's unique ID on Slack.  Open a subfolder, and you'll have access to the actual file attachment.
+    Copy file attachments associated with Slack messages into Microsoft Teams.  Of course, messages in your HTML message archive (described above) that contain file attachments will link to the copy of the file attachment we've copied to Microsoft Teams.   
+    
+    You an also access these archived file attachments directly by selecting the re-created channel in the Teams app, going to the Files tab, and navigating to the channelsurf/fileattachments folder.  You'll then see subfolders whose name maps to the file attachment's unique ID on Slack.  Open a subfolder, and you'll have access to the actual file attachment.
 
 NOTE: Channel Surf uses features of the Microsoft Graph currently in preview (beta).  You may encounter unexpected errors and changes in behavior.  We'll do our best to keep up.
 
