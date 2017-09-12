@@ -1,6 +1,13 @@
 # Channel Surf for Microsoft Teams 
- 
-Quickly migrate your existing Slack channel structure, create a viewable Slack message and file attachment archive, and bulk add new channels in Microsoft Teams.  Let's get started! 
+
+Channel Surf is a command line tool that helps you be successful with Microsoft Teams.  Moving from Slack or starting fresh?  Here's what Channel Surf enables you to do:
+
+* Quickly re-create your existing Slack channel structure
+* Create HTML files in Microsoft Teams that display the message history for each re-created Slack channel
+* Copy file attachments associated with Slack messages into Microsoft Teams
+* Bulk add new channels
+
+Let's get started! 
 
 ## Identify your destination Team
 
