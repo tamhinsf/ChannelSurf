@@ -18,7 +18,7 @@ Use the Microsoft Teams app to create the Team you want to place your re-created
 
   * Copy Slack file attachments (optional)
 
-    Channel Surf will also give you the option of copying files attached to Slack messages into Microsoft Teams. 
+    You can optionally let us copy file attachments associated with Slack messages into the Microsoft Teams folder associated with its re-created channel.  As a bonus, the HTML files that display the message history will link to the copied files.   You an also access these migrated files directly by selecting the re-created channel in the Teams app, going to the Files tab, and navigating to the channelsurf/fileattachments folder.  You'll see subfolders whose name maps to the file attachment's unique ID on Slack.  Open a subfolder, and you'll have access to the actual file attachment.
 
 NOTE: Channel Surf uses features of the Microsoft Graph currently in preview (beta).  You may encounter unexpected errors and changes in behavior.  We'll do our best to keep up.
 
