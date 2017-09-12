@@ -10,7 +10,15 @@ Use the Microsoft Teams app to create the Team you want to place your re-created
 	You'll edit a file called "channels.json" that contains the name and description of the channels you want to create.
 * Re-create Slack channels
 	
-	You can create a Slack Team export on a self-service basis as a Slack Team Owner or Admin at this page [https://my.slack.com/services/export](https://my.slack.com/services/export).  Download the export file and tell Channel Surf its location.   We'll scan it and re-create the Slack channel structure in Teams.  It's that easy!
+	You can create a Slack Team export on a self-service basis as a Slack Team Owner or Admin at this page [https://my.slack.com/services/export](https://my.slack.com/services/export).  Download the export file and tell Channel Surf its location.   We'll scan it and re-create the Slack channel structure in Teams - and give you the option to do more.  
+
+  * Copy Slack message history (optional)
+
+    Want to create HTML files that display the message history for each Slack channel that’s been re-created in Microsoft Teams?  If yes, we'll create a sequentially named set of HTML files, which you can view by launching the Teams app, selecting a re-created Slack channel, opening the Files tab and navigating to this path: channelsurf/messages/html.  Note: a better viewing experience may be coming in the future.  
+
+  * Copy Slack file attachments (optional)
+
+    Channel Surf will also give you the option of copying files attached to Slack messages into Microsoft Teams. 
 
 NOTE: Channel Surf uses features of the Microsoft Graph currently in preview (beta).  You may encounter unexpected errors and changes in behavior.  We'll do our best to keep up.
 
