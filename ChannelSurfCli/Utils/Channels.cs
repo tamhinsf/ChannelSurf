@@ -45,10 +45,10 @@ namespace ChannelSurfCli.Utils
 
                         // artificially limit the number of channels scanned as to make testing go faster
 
-                        if (slackChannels.Count > 10)
-                        {
-                            return slackChannels;
-                        }
+                        // if (slackChannels.Count > 10)
+                        // {
+                        //     return slackChannels;
+                        // }
                     }
                 }
             }
