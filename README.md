@@ -7,7 +7,7 @@ Moving to Microsoft Teams from Slack or starting fresh?  You've come to the righ
 * Copy Slack file attachments into Teams
 * Bulk add new Teams channels
 
-Let's get started! 
+We'll add features as more Microsoft Teams APIs become available and as time permits.  For now, let's get started! 
 
 ## Identify your destination Team
 
