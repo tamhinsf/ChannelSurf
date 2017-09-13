@@ -1,11 +1,11 @@
 # Channel Surf for Microsoft Teams 
 
-Moving to Microsoft Teams from Slack or starting fresh?  Here's what Channel Surf enables you to do:
+Moving to Microsoft Teams from Slack or starting fresh?  Here's what Channel Surf can do for you:
 
-* Quickly re-create your existing Slack channel structure
-* Create HTML files in Microsoft Teams that display the message history for each re-created Slack channel
+* Quickly re-create your existing Slack Teams channel structure in Microsoft Teams
+* Create an HTML archive of Slack messages in Microsoft Teams for each re-created Slack channel
 * Copy file attachments associated with Slack messages into Microsoft Teams
-* Bulk add new channels
+* Bulk add new Microsoft Teams channels
 
 Let's get started! 
 
