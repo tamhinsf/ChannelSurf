@@ -11,7 +11,10 @@ We'll add features as more Microsoft Teams APIs become available and as time per
 
 ## Identify your destination Team
 
-Use the Microsoft Teams app to create the Team you want to place your re-created or new channels within.  Then, decide if you want to:
+You can use the Microsoft Teams app to create the Team you want to place your re-created or new channels within, or wait and create a new Team when you run Channel Surf.
+
+Either way, you'll need to decide if you want to:
+
 * Add entirely new channels 
 	
 	You'll edit a file called "channels.json" that contains the name and description of the channels you want to add.
