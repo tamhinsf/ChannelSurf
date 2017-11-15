@@ -223,9 +223,8 @@ namespace ChannelSurfCli.Utils
                 Console.WriteLine("You're not a member of any existing Microsoft Teams");
                 Console.WriteLine("You must be a member of an existing Team before you can import channels.");
                 Console.WriteLine("");
-                Console.WriteLine("Sign in to Microsoft Teams at https://teams.microsoft.com and create a new Team.");
-                Console.WriteLine("Then run this app again.");
-                return "";
+                Console.WriteLine("You can create a new Team right now!");
+                return CreateNewTeam(aadAccessToken);
             }
 
             Console.WriteLine("You're currently a member of these Teams");
@@ -235,11 +234,24 @@ namespace ChannelSurfCli.Utils
                 Console.WriteLine("[" + i + "]" + " " + msTeam.value[i].displayName + " " + msTeam.value[i].description);
             }
 
-            Console.Write("Enter the destination Team: ");
+            Console.Write("Enter the destination Team number or type \"new\" to create a new Team: ");
             var selectedTeamIndex = Console.ReadLine();
+            if(selectedTeamIndex.StartsWith("n", StringComparison.CurrentCultureIgnoreCase))
+            {
+                return CreateNewTeam(aadAccessToken);
+            }
             var selectedTeamId = msTeam.value[Convert.ToInt16(selectedTeamIndex)].id;
             Console.WriteLine("Team ID is " + selectedTeamId);
             return selectedTeamId;
         }
+
+        public static string CreateNewTeam(string aadAccessToken)
+        {
+            Console.Write("Enter your new Team name: ");
+            var newGroupAndTeamName = Console.ReadLine();
+            var newTeamId = Groups.CreateGroupAndTeam(aadAccessToken, newGroupAndTeamName.Trim());
+            return newTeamId;
+        }
+
     }
 }
