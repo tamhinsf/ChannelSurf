@@ -8,13 +8,13 @@
   {
     "name": "my other channel",
     "purpose": {
-      "value": "my other channel description",
+      "value": "my other channel description"
     }
   },
   {
     "name": "my unique channel",
     "purpose": {
-      "value": "my unique channel description",
+      "value": "my unique channel description"
     }
-  },
+  }
 ]
