@@ -134,7 +134,7 @@ IMPORTANT: You Slack export contains a security token that can be used by ANYONE
    * Consent to using ChannelSurfCli
    * Enter your O365 credentials.  
    * Return to your command prompt 
-* Select the target Microsoft Team you want to create or re-create your channels into.
+* Select the target Microsoft Team you want to create or re-create your channels into.  You can also choose to create a new Microsoft Team.
 * Go back to the Microsoft Team app and explore the channels you added!
 
 ## Questions and comments
