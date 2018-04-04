@@ -257,13 +257,15 @@ namespace ChannelSurfCli.Utils
                         {
                             numOfMessagesToTake = messageList.Count - messageIndexPosition;
                         }
-                        string fileBody = "<body>";
+                        StringBuilder fileBody = new StringBuilder();
+                        fileBody.Append("<body>");
+                        fileBody.AppendLine("");
                         for (int i = 0; i < numOfMessagesToTake; i++)
                         {
-                            var messageAsHtml = MessageToHtml(messageList[i], channelsMapping);
-                            fileBody += messageAsHtml;
+                            var messageAsHtml = MessageToHtml(messageList[messageIndexPosition + i], channelsMapping);
+                            fileBody.AppendLine(messageAsHtml);
                         }
-                        fileBody += "</body>";
+                        fileBody.AppendLine("</body>");
                         messageIndexPosition += numOfMessagesToTake;
                         w.WriteLine(fileBody);
                     }
