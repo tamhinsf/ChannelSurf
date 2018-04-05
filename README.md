@@ -21,6 +21,8 @@ Either way, you'll need to decide if you want to:
 * Re-create Slack channels
 	
 	You can create a Slack Team export on a self-service basis as a Slack Team Owner or Admin at this page [https://my.slack.com/services/export](https://my.slack.com/services/export).  Download the export file and tell Channel Surf its location.   We'll scan it and re-create the Slack channel structure in Teams - and give you the option to do more.  
+	
+	WARNING: Slack channels can be public or private - a concept not currently supported in Microsoft Teams.  This import tool will re-create all Slack channels in MS Teams, irrespective of whether they were public or private in Slack.  Want that to change?  Go ahead and [https://github.com/tamhinsf/ChannelSurf/issues:](file an issue).
 
   * Archive Slack message history (optional)
 
