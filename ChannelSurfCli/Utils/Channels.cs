@@ -36,6 +36,12 @@ namespace ChannelSurfCli.Utils
                             channelId = "";
                         }
 
+                        if ((bool)obj.SelectToken("is_archived"))
+                        {
+                            Console.WriteLine("Skipping archived slack channel: {0}", obj["name"].ToString());
+                            continue;
+                        }
+
                         slackChannels.Add(new Models.Slack.Channels()
                         {
                             channelId = channelId,
