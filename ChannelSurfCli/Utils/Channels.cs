@@ -73,8 +73,7 @@ namespace ChannelSurfCli.Utils
             return msTeamsTeam.value;
         }
 
-        public static List<Combined.ChannelsMapping>
-                                 CreateChannelsInMsTeams(string aadAccessToken, string teamId, List<Slack.Channels> slackChannels, string basePath)
+        public static List<Combined.ChannelsMapping> CreateChannelsInMsTeams(string aadAccessToken, string teamId, List<Slack.Channels> slackChannels, string basePath)
         {
             List<Combined.ChannelsMapping> combinedChannelsMapping = new List<Combined.ChannelsMapping>();
 
@@ -206,10 +205,12 @@ namespace ChannelSurfCli.Utils
             Helpers.httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
             var httpResponseMessage =
                     Helpers.httpClient.GetAsync(O365.MsGraphBetaEndpoint + "me/joinedTeams").Result;
+            Console.WriteLine("httpResponseMessage is  " + httpResponseMessage.Content.ReadAsStringAsync().Result);
             if (httpResponseMessage.IsSuccessStatusCode)
             {
                 var httpResultString = httpResponseMessage.Content.ReadAsStringAsync().Result;
                 msTeam = JsonConvert.DeserializeObject<MsTeams.Team>(httpResultString);
+                Console.WriteLine("Groups " + httpResultString);
             }
             else
             {

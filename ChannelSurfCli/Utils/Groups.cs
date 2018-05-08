@@ -59,6 +59,22 @@ namespace ChannelSurfCli.Utils
                 Console.WriteLine("REASON: " + httpResponseMessage.Content.ReadAsStringAsync().Result);
                 return "";
             }
+            
+            // this might break on some platforms
+            dynamic newUserObject = new JObject();
+            newUserObject.Add("@odata.id","https://graph.microsoft.com/beta/directoryObjects/" + O365.getUserGuid(aadAccessToken,"me"));
+
+            var addUserToTeamPostData = JsonConvert.SerializeObject(newUserObject);
+             httpResponseMessage =
+                Helpers.httpClient.PostAsync(O365.MsGraphBetaEndpoint + "groups/" + newGroupId + "/members/$ref",
+                    new StringContent(addUserToTeamPostData, Encoding.UTF8, "application/json")).Result;
+
+            if (!httpResponseMessage.IsSuccessStatusCode)
+            {
+                Console.WriteLine("ERROR: Teams Membership could not be updated");
+                Console.WriteLine("REASON: " + httpResponseMessage.Content.ReadAsStringAsync().Result);
+                return "";
+            }
 
             return newGroupId;
         }

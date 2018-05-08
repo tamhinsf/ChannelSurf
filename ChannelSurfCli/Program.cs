@@ -66,7 +66,7 @@ namespace ChannelSurfCli
 
                 Console.WriteLine("");
                 Console.WriteLine("****************************************************************************************************");
-                Console.WriteLine("Welcome to Channel Master!");
+                Console.WriteLine("Welcome to Channel Surf!");
                 Console.WriteLine("This tool makes it easy to bulk create channels in an existing Microsoft Team.");
                 Console.WriteLine("All we need a Slack Team export ZIP file whose channels you wish to re-create.");
                 Console.WriteLine("Or, you can define new channels in a file called channels.json.");
@@ -107,7 +107,7 @@ namespace ChannelSurfCli
 
                 authenticationResult = UserLogin();
                 var aadAccessToken = authenticationResult.AccessToken;
-
+                
                 if (String.IsNullOrEmpty(authenticationResult.AccessToken))
                 {
                     Console.WriteLine("Something went wrong.  Please try again!");
