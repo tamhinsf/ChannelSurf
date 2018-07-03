@@ -7,7 +7,11 @@ Moving to Microsoft Teams from Slack or starting fresh?  You've come to the righ
 * Copy Slack file attachments into Teams
 * Bulk add new Teams channels
 
-We'll add features as more Microsoft Teams APIs become available and as time permits.  For now, let's get started! 
+We'll add features as more Microsoft Teams APIs become available and as time permits.   
+
+Need a solution to quickly clone, archive, un-archive your existing Microsoft Teams and manage the apps you've installed to them?  Check out [Quick Teams](https://github.com/tamhinsf/QuickTeams)
+
+For now, let's get started!
 
 ## Identify your destination Team
 
@@ -155,7 +159,7 @@ Questions about Microsoft Graph development in general should be posted to [Stac
 
 ## Copyright
 
-Copyright (c) 2017 Tam Huynh. All rights reserved. 
+Copyright (c) 2018 Tam Huynh. All rights reserved. 
 
 
 ### Disclaimer ###
