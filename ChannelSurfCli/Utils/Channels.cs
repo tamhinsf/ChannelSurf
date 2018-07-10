@@ -63,7 +63,7 @@ namespace ChannelSurfCli.Utils
             Helpers.httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", aadAccessToken);
             Helpers.httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
 
-            var httpResponseMessage = Helpers.httpClient.GetAsync(O365.MsGraphBetaEndpoint + "groups/" + teamId + "/channels").Result;
+            var httpResponseMessage = Helpers.httpClient.GetAsync(O365.MsGraphBetaEndpoint + "teams/" + teamId + "/channels").Result;
             if (httpResponseMessage.IsSuccessStatusCode)
             {
                 var httpResultString = httpResponseMessage.Content.ReadAsStringAsync().Result;
@@ -122,7 +122,7 @@ namespace ChannelSurfCli.Utils
 
                 var createTeamsChannelPostData = JsonConvert.SerializeObject(slackChannelAsMsChannelObject);
                 var httpResponseMessage =
-                    Helpers.httpClient.PostAsync(O365.MsGraphBetaEndpoint + "groups/" + teamId + "/channels",
+                    Helpers.httpClient.PostAsync(O365.MsGraphBetaEndpoint + "teams/" + teamId + "/channels",
                         new StringContent(createTeamsChannelPostData, Encoding.UTF8, "application/json")).Result;
 
                 if (!httpResponseMessage.IsSuccessStatusCode)
@@ -205,7 +205,7 @@ namespace ChannelSurfCli.Utils
             Helpers.httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
             var httpResponseMessage =
                     Helpers.httpClient.GetAsync(O365.MsGraphBetaEndpoint + "me/joinedTeams").Result;
-            Console.WriteLine("httpResponseMessage is  " + httpResponseMessage.Content.ReadAsStringAsync().Result);
+            // Console.WriteLine("httpResponseMessage is  " + httpResponseMessage.Content.ReadAsStringAsync().Result);
             if (httpResponseMessage.IsSuccessStatusCode)
             {
                 var httpResultString = httpResponseMessage.Content.ReadAsStringAsync().Result;
