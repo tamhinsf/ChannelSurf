@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 
 namespace ChannelSurfCli.Utils
 {
@@ -54,10 +55,10 @@ namespace ChannelSurfCli.Utils
 
                             // deal with message basics: when, body, who
 
-                            var messageTs = (string)obj.SelectToken("ts");
+                            var messageTs = new DateTime(1970, 1, 1, 0, 0, 0).AddSeconds(Double.Parse((string)obj.SelectToken("ts")));
                             var messageText = (string)obj.SelectToken("text");
                             var messageId = channelsMapping.slackChannelId + "." + messageTs;
-                            //messageText = RegexDetector.DetectSlackParens(messageText, slackUserList);
+                            messageText = DetectSlackParens(messageText, slackUserList);
                             var messageSender = Utils.Messages.FindMessageSender(obj, slackUserList);
 
                             // create a list of attachments to upload
@@ -170,7 +171,7 @@ namespace ChannelSurfCli.Utils
                             {
                                 id = messageId,
                                 text = messageText,
-                                ts = messageTs,
+                                ts = messageTs.ToLocalTime().ToString(),
                                 user = messageSender,
                                 fileAttachment = fileAttachment,
                                 attachments = attachmentsList,
@@ -358,6 +359,12 @@ namespace ChannelSurfCli.Utils
             return w;
         }
 
+        static string DetectSlackParens(string messageText, List<ViewModels.SimpleUser> slackUserList)
+        {
+            return Regex.Replace(messageText, @"<@(\w+)>",
+                m => slackUserList.Where(w => w.userId == m.Groups[1].Value)
+                .DefaultIfEmpty(new ViewModels.SimpleUser() { name = m.Value }).First().name);
+        }
 
         static string FindMessageSender(JObject obj, List<ViewModels.SimpleUser> slackUserList)
         {
