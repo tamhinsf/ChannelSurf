@@ -36,7 +36,7 @@ namespace ChannelSurfCli.Utils
             attachmentsToUpload.Clear();
 
             Console.WriteLine("Migrating messages in channel " + channelsMapping.slackChannelName);
-            foreach (var file in Directory.GetFiles(Path.Combine(basePath, channelsMapping.slackChannelName)))
+            foreach (var file in Directory.GetFiles(Path.Combine(basePath, channelsMapping.slackChannelName)).OrderBy(f => f))
             {
                 Console.WriteLine("File " + file);
                 using (FileStream fs = new FileStream(file, FileMode.Open, FileAccess.Read))
