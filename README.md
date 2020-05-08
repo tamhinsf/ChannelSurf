@@ -71,14 +71,15 @@ You must register this application in the Azure Active Directory tenant associat
 * Once Azure has created your app, copy your Application Id and give your application access to the required Microsoft Graph API permissions.  
    * Click your app's name (i.e. ChannelSurfCli) from the list of applications
    * Copy the Application Id
-   * All settings -> Required permissions
-     * Click Add  
-     * Select an API -> Microsoft Graph -> Select (button)
+   * All settings -> API permissions
+     * Add a permission -> Microsoft Graph -> Delegated permissions
      * Select permissions 
 	   * Read all users' full profiles
 	   * Read and write all groups
-     * Click Select
+     * Click Add permissions
      * Click Done
+  * Manifest
+     * `allowPublicClient` -> Set to `true`
 	
   * If you plan to run Channel Surf as a non-administrator: applications built using the Graph API permissions above require administrative consent before non-administrative users can sign in - which fortunately, you'll only need to do once.  
     * You can immediately provide consent to all users in your organization using the Azure Portal. Click the "Grant permissions" button, which you can reach via your app's "Required permissions" link.
